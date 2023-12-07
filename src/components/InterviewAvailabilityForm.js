@@ -154,7 +154,7 @@
 
 // export default InterviewAvailabilityForm;
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { updateFormCompletion } from "../redux/action";
 import { useDispatch } from "react-redux";
 
@@ -170,14 +170,28 @@ const InterviewAvailabilityForm = () => {
   });
   const [errors, setErrors] = useState({});
 
-  var aryIanaTimeZones = Intl.supportedValuesOf("timeZone");
+  // var aryIanaTimeZones = Intl.supportedValuesOf("timeZone");
 
-  let date = new Date();
-  aryIanaTimeZones.forEach((timeZone) => {
-    let strTime = date.toLocaleString("en-US", { timeZone: `${timeZone}` });
-    //console.log(timeZone, strTime);
-    formData.selectedTimeZone.push(timeZone);
-  });
+  // let date = new Date();
+  // aryIanaTimeZones.forEach((timeZone) => {
+  //   let strTime = date.toLocaleString("en-US", { timeZone: `${timeZone}` });
+  //   //console.log(timeZone, strTime);
+  //   formData.selectedTimeZone.push(timeZone);
+  // });
+  useEffect(() => {
+    // Fetch time zones and update selectedTimeZone in formData
+    const fetchTimeZones = () => {
+      const aryIanaTimeZones = Intl.supportedValuesOf("timeZone");
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        selectedTimeZone: aryIanaTimeZones, // Update selectedTimeZone with fetched time zones
+      }));
+    };
+
+    fetchTimeZones();
+  }, []);
+
+  console.log("timexome",formData.selectedTimeZone);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -300,7 +314,7 @@ const InterviewAvailabilityForm = () => {
               <p className="text-red-500">{errors.location}</p>
             )}
           </div>
-          {/* ... (rest of your form inputs) */}
+          
           <div className="mb-4">
             <label>3. Interview Date*</label>
             <br />
@@ -336,8 +350,6 @@ const InterviewAvailabilityForm = () => {
             <br />
             <select
               name="selectedTimeZone"
-              value={formData.selectedTimeZone}
-              onChange={handleInputChange}
               required
               className="border border-gray-300 rounded-md p-2 w-2/3"
             >
