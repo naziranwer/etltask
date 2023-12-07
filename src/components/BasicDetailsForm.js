@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateFormCompletion } from "../redux/action";
 
 const BasicDetailsForm = () => {
+  const dispatch=useDispatch();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,6 +23,19 @@ const BasicDetailsForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
+    const isFormValid = formData.name !== '' && formData.email !== '' ;
+
+    if (isFormValid) {
+      // Dispatch action to update Redux store with validated form data
+      // dispatch(updateFormData({ basicDetails: formData }));
+
+      // Dispatch action to update form completion status
+      dispatch(updateFormCompletion('basicDetails', true));
+      alert("This Section Submitted Go To Document Collection");
+    } else {
+      // Handle errors or display error messages
+      setErrors({ message: 'Please fill in all required fields.' });
+    }
   };
 
   return (
@@ -79,7 +95,7 @@ const BasicDetailsForm = () => {
               value={formData.dateOfBirth}
               onChange={handleInputChange}
               placeholder="Date of Birth"
-              required
+              
               className="border border-gray-300 rounded-md p-2 "
             />
           </div>
@@ -92,13 +108,13 @@ const BasicDetailsForm = () => {
               value={formData.mobileNumber}
               onChange={handleInputChange}
               placeholder="Mobile Number"
-              required
+              
               className="border border-gray-300 rounded-md p-2 w-2/3"
             />
           </div>
-          {/* <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
             Submit
-          </button> */}
+          </button>
         </form>
       </div>
     </div>
